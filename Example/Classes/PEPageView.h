@@ -8,6 +8,6 @@
 
 @interface PEPageView : SYPageView
 
-@property (nonatomic, strong, readonly) UILabel *textLabel;
+@property (nonatomic, strong) IBOutlet UILabel *textLabel;
 
 @end

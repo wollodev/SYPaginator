@@ -99,20 +99,20 @@
 		[(SYPaginatorScrollView *)_scrollView setPrivateDelegate:self];
 		[self addSubview:_scrollView];
 		
-		// Page control
-		CGSize size = self.bounds.size;
-		_pageControl = [[SYPageControl alloc] initWithFrame:CGRectMake(0.0f, size.height - 18.0f, size.width, 18.0f)];
-		_pageControl.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-		_pageControl.currentPage = 0;
-		[_pageControl addTarget:self action:@selector(_pageControlChanged:) forControlEvents:UIControlEventValueChanged];
-		[self addSubview:_pageControl];
-		
+    // Page control
+    CGSize size = self.bounds.size;
+    _pageControl = [[SYPageControl alloc] initWithFrame:CGRectMake(0.0f, size.height - 18.0f, size.width, 18.0f)];
+    _pageControl.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+    _pageControl.currentPage = 0;
+    [_pageControl addTarget:self action:@selector(_pageControlChanged:) forControlEvents:UIControlEventValueChanged];
+    [self addSubview:_pageControl];
+    
 		// Setup views cache
 		_pages = [[NSMutableDictionary alloc] init];
 		_reuseablePages = [[NSMutableDictionary alloc] init];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_cleanup)
-													 name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
+                                                 name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
 	}
 	return self;
 }
@@ -129,6 +129,14 @@
 	}
 }
 
+// Reference: http://stackoverflow.com/a/1373096
+-(UIView*)hitTest:(CGPoint)point withEvent:(UIEvent*)event
+{
+  UIView* child = nil;
+  if ((child = [super hitTest:point withEvent:event]) == self)
+    return _scrollView;
+  return child;
+}
 
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
 	if (CGRectIsEmpty(_swipeableRect) == NO) {
@@ -362,7 +370,7 @@
 	if (numberOfKeys - _pagesToPreload - _pagesToPreload <= 0) {
 		return;
 	}
-
+  
 	NSArray *sortedKeys = [allKeys sortedArrayUsingSelector:@selector(compare:)];
 	NSInteger currentIndex = [sortedKeys indexOfObject:[NSNumber numberWithInteger:self.currentPageIndex]];
 	
